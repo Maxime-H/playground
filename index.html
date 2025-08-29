@@ -2,19 +2,19 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Rainbow Smiley Face with Calculator</title>
+  <title>Interactive Fun Page</title>
   <style>
     body {
       display: flex;
-      flex-direction: column; /* stack face, text, calculator */
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       background-color: #f0f0f0;
       font-family: Arial, sans-serif;
     }
 
-    /* Animate the face color */
+    /* Rainbow Smiley */
     @keyframes colorChange {
       0%   { background-color: #3498db; }
       25%  { background-color: yellow; }
@@ -30,7 +30,7 @@
       position: relative;
       animation: colorChange 5s infinite;
       margin-bottom: 20px;
-      cursor: pointer; /* indicates it's clickable */
+      cursor: pointer;
     }
 
     .eye {
@@ -62,147 +62,64 @@
       font-weight: bold;
       color: #333;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
 
-    /* Calculator styles */
-    .calculator {
-      display: none; /* hidden by default */
-      background-color: #fff;
-      padding: 20px;
+    /* Frog image with button */
+    .image-container {
+      position: relative;
+      display: inline-block;
+      margin-top: 20px;
+    }
+
+    .image-container img {
+      width: 300px;
       border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
-    .calculator input[type="text"] {
-      width: 100%;
-      font-size: 24px;
-      text-align: right;
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-
-    .buttons {
-      display: grid;
-      grid-template-columns: repeat(4, 60px);
-      gap: 10px;
-    }
-
-    .buttons button {
-      padding: 15px;
+    .image-container button {
+      position: absolute;
+      bottom: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
       font-size: 18px;
-      border-radius: 8px;
       border: none;
-      background-color: #3498db;
+      border-radius: 8px;
+      background-color: #2ecc71;
       color: white;
       cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
       transition: background-color 0.2s;
     }
 
-    .buttons button:hover { background-color: #2980b9; }
-    .buttons .operator { background-color: #e67e22; }
-    .buttons .operator:hover { background-color: #d35400; }
-    .buttons .equal { background-color: #2ecc71; grid-column: span 2; }
-    .buttons .equal:hover { background-color: #27ae60; }
-    .buttons .clear { background-color: #e74c3c; grid-column: span 4; }
-    .buttons .clear:hover { background-color: #c0392b; }
-
+    .image-container button:hover {
+      background-color: #27ae60;
+    }
   </style>
 </head>
 <body>
 
-  <div class="face" onclick="showCalculator()">
+  <!-- Rainbow Smiley -->
+  <div class="face">
     <div class="eye left"></div>
     <div class="eye right"></div>
     <div class="mouth"></div>
   </div>
 
+  <!-- Text -->
   <div class="text">I'm happy</div>
 
-  <!-- Calculator hidden by default -->
-  <div class="calculator" id="calculator">
-    <input type="text" id="display" disabled>
-    <div class="buttons">
-      <button onclick="appendNumber('7')">7</button>
-      <button onclick="appendNumber('8')">8</button>
-      <button onclick="appendNumber('9')">9</button>
-      <button class="operator" onclick="setOperator('/')">/</button>
-
-      <button onclick="appendNumber('4')">4</button>
-      <button onclick="appendNumber('5')">5</button>
-      <button onclick="appendNumber('6')">6</button>
-      <button class="operator" onclick="setOperator('*')">*</button>
-
-      <button onclick="appendNumber('1')">1</button>
-      <button onclick="appendNumber('2')">2</button>
-      <button onclick="appendNumber('3')">3</button>
-      <button class="operator" onclick="setOperator('-')">-</button>
-
-      <button onclick="appendNumber('0')">0</button>
-      <button onclick="appendNumber('.')">.</button>
-      <button class="equal" onclick="calculate()">=</button>
-      <button class="operator" onclick="setOperator('+')">+</button>
-
-      <button class="clear" onclick="clearDisplay()">C</button>
-    </div>
+  <!-- Frog image with Next Page button -->
+  <div class="image-container">
+    <img src="https://i.imgur.com/1X5QJvO.png" alt="Frog">
+    <button onclick="goToCalculator()">Next Page</button>
   </div>
 
   <script>
-    // Show calculator when smiley is clicked
-    function showCalculator() {
-      const calc = document.getElementById('calculator');
-      calc.style.display = calc.style.display === 'none' ? 'block' : 'none';
-    }
-
-    // Calculator functionality
-    let currentInput = '';
-    let operator = '';
-    let previousInput = '';
-
-    function appendNumber(number) {
-      currentInput += number;
-      updateDisplay();
-    }
-
-    function setOperator(op) {
-      if (currentInput === '') return;
-      if (previousInput !== '') calculate();
-      operator = op;
-      previousInput = currentInput;
-      currentInput = '';
-    }
-
-    function calculate() {
-      if (previousInput === '' || currentInput === '') return;
-      let result;
-      const prev = parseFloat(previousInput);
-      const curr = parseFloat(currentInput);
-
-      switch(operator) {
-        case '+': result = prev + curr; break;
-        case '-': result = prev - curr; break;
-        case '*': result = prev * curr; break;
-        case '/': result = prev / curr; break;
-        default: return;
-      }
-
-      currentInput = result.toString();
-      operator = '';
-      previousInput = '';
-      updateDisplay();
-    }
-
-    function clearDisplay() {
-      currentInput = '';
-      previousInput = '';
-      operator = '';
-      updateDisplay();
-    }
-
-    function updateDisplay() {
-      document.getElementById('display').value = currentInput;
+    function goToCalculator() {
+      // Navigate to calculator page
+      window.location.href = "calculator.html"; // make sure this file exists
     }
   </script>
 
