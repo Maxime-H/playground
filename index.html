@@ -2,11 +2,11 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Rainbow Smiley Face</title>
+  <title>Rainbow Smiley Face with Calculator</title>
   <style>
     body {
       display: flex;
-      flex-direction: column; /* stack face and text vertically */
+      flex-direction: column; /* stack face, text, calculator */
       justify-content: center;
       align-items: center;
       height: 100vh;
@@ -16,11 +16,11 @@
 
     /* Animate the face color */
     @keyframes colorChange {
-      0%   { background-color: #3498db; } /* blue */
+      0%   { background-color: #3498db; }
       25%  { background-color: yellow; }
       50%  { background-color: green; }
       75%  { background-color: orange; }
-      100% { background-color: #3498db; } /* back to blue */
+      100% { background-color: #3498db; }
     }
 
     .face {
@@ -29,7 +29,8 @@
       border-radius: 50%;
       position: relative;
       animation: colorChange 5s infinite;
-      margin-bottom: 20px; /* space between face and text */
+      margin-bottom: 20px;
+      cursor: pointer; /* indicates it's clickable */
     }
 
     .eye {
@@ -41,13 +42,8 @@
       top: 50px;
     }
 
-    .eye.left {
-      left: 50px;
-    }
-
-    .eye.right {
-      right: 50px;
-    }
+    .eye.left { left: 50px; }
+    .eye.right { right: 50px; }
 
     .mouth {
       width: 100px;
@@ -66,17 +62,149 @@
       font-weight: bold;
       color: #333;
       text-align: center;
+      margin-bottom: 20px;
     }
+
+    /* Calculator styles */
+    .calculator {
+      display: none; /* hidden by default */
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .calculator input[type="text"] {
+      width: 100%;
+      font-size: 24px;
+      text-align: right;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 60px);
+      gap: 10px;
+    }
+
+    .buttons button {
+      padding: 15px;
+      font-size: 18px;
+      border-radius: 8px;
+      border: none;
+      background-color: #3498db;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .buttons button:hover { background-color: #2980b9; }
+    .buttons .operator { background-color: #e67e22; }
+    .buttons .operator:hover { background-color: #d35400; }
+    .buttons .equal { background-color: #2ecc71; grid-column: span 2; }
+    .buttons .equal:hover { background-color: #27ae60; }
+    .buttons .clear { background-color: #e74c3c; grid-column: span 4; }
+    .buttons .clear:hover { background-color: #c0392b; }
+
   </style>
 </head>
 <body>
-  <div class="face">
+
+  <div class="face" onclick="showCalculator()">
     <div class="eye left"></div>
     <div class="eye right"></div>
     <div class="mouth"></div>
   </div>
 
-  <!-- New text under the smiley -->
   <div class="text">I'm happy</div>
+
+  <!-- Calculator hidden by default -->
+  <div class="calculator" id="calculator">
+    <input type="text" id="display" disabled>
+    <div class="buttons">
+      <button onclick="appendNumber('7')">7</button>
+      <button onclick="appendNumber('8')">8</button>
+      <button onclick="appendNumber('9')">9</button>
+      <button class="operator" onclick="setOperator('/')">/</button>
+
+      <button onclick="appendNumber('4')">4</button>
+      <button onclick="appendNumber('5')">5</button>
+      <button onclick="appendNumber('6')">6</button>
+      <button class="operator" onclick="setOperator('*')">*</button>
+
+      <button onclick="appendNumber('1')">1</button>
+      <button onclick="appendNumber('2')">2</button>
+      <button onclick="appendNumber('3')">3</button>
+      <button class="operator" onclick="setOperator('-')">-</button>
+
+      <button onclick="appendNumber('0')">0</button>
+      <button onclick="appendNumber('.')">.</button>
+      <button class="equal" onclick="calculate()">=</button>
+      <button class="operator" onclick="setOperator('+')">+</button>
+
+      <button class="clear" onclick="clearDisplay()">C</button>
+    </div>
+  </div>
+
+  <script>
+    // Show calculator when smiley is clicked
+    function showCalculator() {
+      const calc = document.getElementById('calculator');
+      calc.style.display = calc.style.display === 'none' ? 'block' : 'none';
+    }
+
+    // Calculator functionality
+    let currentInput = '';
+    let operator = '';
+    let previousInput = '';
+
+    function appendNumber(number) {
+      currentInput += number;
+      updateDisplay();
+    }
+
+    function setOperator(op) {
+      if (currentInput === '') return;
+      if (previousInput !== '') calculate();
+      operator = op;
+      previousInput = currentInput;
+      currentInput = '';
+    }
+
+    function calculate() {
+      if (previousInput === '' || currentInput === '') return;
+      let result;
+      const prev = parseFloat(previousInput);
+      const curr = parseFloat(currentInput);
+
+      switch(operator) {
+        case '+': result = prev + curr; break;
+        case '-': result = prev - curr; break;
+        case '*': result = prev * curr; break;
+        case '/': result = prev / curr; break;
+        default: return;
+      }
+
+      currentInput = result.toString();
+      operator = '';
+      previousInput = '';
+      updateDisplay();
+    }
+
+    function clearDisplay() {
+      currentInput = '';
+      previousInput = '';
+      operator = '';
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      document.getElementById('display').value = currentInput;
+    }
+  </script>
+
 </body>
 </html>
